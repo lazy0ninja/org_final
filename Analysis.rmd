@@ -17,7 +17,7 @@ library(dplyr)
 
 ### Load Data
 ```{r}
-applications <- read_csv("/Users/kaz/DataspellProjects/Org-Analytics/Final Project/Data/closest_dock_events.csv")
+applications <- read_csv("/Users/kaz/Desktop/Final Project_org/Data/closest_dock_events.csv")
 ```
 
 ```{r}
@@ -60,10 +60,6 @@ applications$processing_time <- as.numeric(applications$processing_time)
 applications$ln_processing_time <- log(applications$processing_time)
 ```
 
-```{r}
-
-hist(applications$processing_time, main = "Distribution of Processing Time", xlab = "Processing Time", col = "lightblue")
-```
 
 
 
@@ -126,6 +122,26 @@ summary(model2)
 
 ```
 
+
+### effect size
+```{r}
+
+# Standardizing only continuous variables
+continuous_vars <- c("in_degree", "out_degree", "betweenness", "experience", "advice_count_final")
+train_data[continuous_vars] <- scale(train_data[continuous_vars])
+
+# Model fitting remains the same
+model2_standardized <- lm(processing_time ~ gender * in_degree + gender * out_degree + gender * betweenness +
+  race * in_degree + race * out_degree + race * betweenness +
+  experience + disposal_type + advice_count_final + start_year + workgroup,
+                          data = train_data)
+
+summary(model2_standardized)
+
+```
+
+```{r}
+```
 
 
 ### Check the multicolinarity
@@ -215,3 +231,8 @@ print(importance)
 varImpPlot(rf_model)
 
 ```
+
+
+
+
+
